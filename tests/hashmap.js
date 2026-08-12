@@ -88,4 +88,20 @@ export class HashMap {
         }
     }
 
+    length() {
+
+        let entryCounter = 0;
+        for (let i = 0; i < this.capacity; i++) {
+            if (this.elements[i]) {
+                let ptrTrav = this.elements[i];
+                while (ptrTrav !== null) {
+                    entryCounter++;
+                    ptrTrav = ptrTrav.nextNode;
+                }
+            }
+        }
+
+        return entryCounter;
+    }
+
 }
