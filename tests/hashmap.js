@@ -23,4 +23,55 @@ export class HashMap {
         return hashCode;
     }
 
+
+    set(key, value) {
+        const limitCapacity = this.capacity * this.loadFactor;
+        if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
+        const index = this.hash(key);
+        const hashItem = new Node(key, value);
+        if (index < 0 || index >= this.capacity) {
+            throw new Error("Trying to access index out of bounds");
+        }
+
+        const currEl = this.elements[index];
+
+        if (currEl) {
+            if (currEl.key !== key) {
+                let ptrTrav = currEl;
+                while (ptrTrav.nextNode !== null) {
+                    if (ptrTrav.key === key) {
+                        ptrTrav.nextNode = hashItem;
+                        break;
+                    }
+
+                    ptrTrav = ptrTrav.nextNode;
+                }
+
+                if (ptrTrav.key === key) {
+                    ptrTrav.value = hashItem.value;
+                    return;
+                }
+
+                ptrTrav.nextNode = hashItem;
+            }
+        } else {
+            this.elements[index] = hashItem;
+        }
+    }
+
+    get(key) {
+        const index = this.hash(key);
+        const foundedList = this.elements[index];
+        if (!foundedList) {
+            return null;
+        } else {
+            let ptrTrav = foundedList;
+            while (ptrTrav !== null) {
+                if (ptrTrav.key === key) return ptrTrav.value;
+                ptrTrav = ptrTrav.nextNode;
+            }
+            if (ptrTrav.key === key) return ptrTrav.value;
+        }
+    }
+
 }
