@@ -52,3 +52,28 @@ describe('Has a key in the HashMap', () => {
         expect(hashMap.has('Bob')).toBe(false);
     });
 });
+
+describe('Return length of the stored keys', () => {
+    const hashMap = new HashMap();
+
+    hashMap.set('Alice', 'I am');
+    hashMap.set('Bob', 'the');
+    hashMap.set('Charlie', 'old');
+    hashMap.set('Steve', 'value');
+    hashMap.set('Drake', 'I am the old value');
+    hashMap.set('0', 'The value');
+
+
+    
+    test("Return the number of stored keys inside the hashMap", () => {
+        expect(hashMap.length()).toBe(6);
+    });
+});
+
+describe('Return length of the empty hash map', () => {
+    const hashMap = new HashMap();
+
+    test("Return the number of empty entries in hash map", () => {
+        expect(hashMap.length()).toBe(0);
+    });
+});
