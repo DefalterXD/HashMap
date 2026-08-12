@@ -104,4 +104,8 @@ export class HashMap {
         return entryCounter;
     }
 
+    clear() {
+        this.elements = [];
+    }
+
 }
