@@ -77,3 +77,19 @@ describe('Return length of the empty hash map', () => {
         expect(hashMap.length()).toBe(0);
     });
 });
+
+describe('Clear the entire Hash Map entries', () => {
+    const hashMap = new HashMap();
+
+    hashMap.set('Alice', 'I am');
+    hashMap.set('Bob', 'the');
+    hashMap.set('Charlie', 'old');
+    hashMap.set('Steve', 'value');
+    hashMap.set('Drake', 'I am the old value');
+    hashMap.set('0', 'The value');
+
+    test("Return the number of empty entries in hash map after 'clear'", () => {
+        hashMap.clear();
+        expect(hashMap.length()).toBe(0);
+    });
+});
