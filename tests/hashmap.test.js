@@ -33,3 +33,22 @@ describe('Get value form the key', () => {
         expect(hashMap.get('Wrong')).toBe(null);
     });
 });
+
+describe('Has a key in the HashMap', () => {
+    const hashMap = new HashMap();
+
+    hashMap.set('Alice', 'I am the old value');
+    hashMap.set('0', 'I am the value');
+    
+    test("Return true if it find the key 'Alice'", () => {
+        expect(hashMap.has('Alice')).toBe(true);
+    });
+
+    test("Return true if it find the key '0'", () => {
+        expect(hashMap.has('0')).toBe(true);
+    });
+
+    test("Return false if it not find the key", () => {
+        expect(hashMap.has('Bob')).toBe(false);
+    });
+});
