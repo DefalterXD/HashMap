@@ -108,4 +108,20 @@ export class HashMap {
         this.elements = [];
     }
 
+    keys() {
+        const keys = [];
+
+         for (let i = 0; i < this.capacity; i++) {
+            if (this.elements[i]) {
+                let ptrTrav = this.elements[i];
+                while (ptrTrav !== null) {
+                    keys.push(ptrTrav.key);
+                    ptrTrav = ptrTrav.nextNode;
+                }
+            }
+        }
+
+        return keys;
+
+    }
 }
