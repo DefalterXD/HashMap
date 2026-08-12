@@ -74,4 +74,18 @@ export class HashMap {
         }
     }
 
+    has(key) {
+        const index = this.hash(key);
+        const foundedEl = this.elements[index];
+        if (foundedEl) {
+            let ptrTrav = foundedEl;
+            while (ptrTrav !== null) {
+                if (ptrTrav.key === key) return true;
+                ptrTrav = ptrTrav.nextNode;
+            }
+        } else {
+            return false;
+        }
+    }
+
 }
