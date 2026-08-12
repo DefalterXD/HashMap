@@ -105,6 +105,6 @@ describe('Return the stored keys inside hash map', () => {
     hashMap.set('0', 'The value');
 
     test("Return the number of empty entries in hash map after 'clear'", () => {
-        expect(hashMap.keys()).toBe('Alice, Bob, Charlie, Steve, Drake, 0');
+        expect(hashMap.keys()).toBe('Alice, 0, Bob, Charlie, Steve, Drake');
     });
 });
