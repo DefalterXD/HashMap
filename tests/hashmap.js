@@ -23,10 +23,27 @@ export class HashMap {
         return hashCode;
     }
 
+    #checkEntries(limitCapacity) {
+        let entryCounter = 0;
+        for (let i = 0; i < this.capacity; i++) {
+            if (this.elements[i]) {
+                let ptrTrav = this.elements[i];
+                while (ptrTrav !== null) {
+                    entryCounter++;
+                    ptrTrav = ptrTrav.nextNode;
+                }
+            }
+        }
+
+        if (entryCounter > limitCapacity) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     set(key, value) {
         const limitCapacity = this.capacity * this.loadFactor;
-        if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
         const index = this.hash(key);
         const hashItem = new Node(key, value);
         if (index < 0 || index >= this.capacity) {
@@ -41,6 +58,7 @@ export class HashMap {
                 while (ptrTrav.nextNode !== null) {
                     if (ptrTrav.key === key) {
                         ptrTrav.nextNode = hashItem;
+                        if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
                         break;
                     }
 
@@ -49,13 +67,16 @@ export class HashMap {
 
                 if (ptrTrav.key === key) {
                     ptrTrav.value = hashItem.value;
+                    if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
                     return;
                 }
 
                 ptrTrav.nextNode = hashItem;
+                if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
             }
         } else {
             this.elements[index] = hashItem;
+            if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
         }
     }
 
@@ -111,7 +132,7 @@ export class HashMap {
     keys() {
         const keys = [];
 
-         for (let i = 0; i < this.capacity; i++) {
+        for (let i = 0; i < this.capacity; i++) {
             if (this.elements[i]) {
                 let ptrTrav = this.elements[i];
                 while (ptrTrav !== null) {
