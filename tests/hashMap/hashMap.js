@@ -252,4 +252,26 @@ export class HashMap {
         return values.sort().join(', ');
     }
 
+    entries() {
+        const entries = [];
+
+        for (let i = 0; i < this.capacity; i++) {
+            if (this.elements[i]) {
+                let ptrTrav = this.elements[i];
+                while (ptrTrav !== null) {
+                    const entry = [];
+                    entry.push(ptrTrav.key);
+                    entry.push(ptrTrav.value);
+                    if (!entry.includes(entry)) {
+                        entries.push(entry);
+                    } else {
+                        break;
+                    }
+                    ptrTrav = ptrTrav.nextNode;
+                }
+            }
+        }
+
+        return entries;
+    }
 }
