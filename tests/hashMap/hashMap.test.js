@@ -148,3 +148,26 @@ describe('Return the stored values inside hashMap', () => {
         expect(hashMap.values()).toBe('I am, I am the old value, The value, old, the, value');
     });
 });
+
+describe('Return the stored entries inside hashMap', () => {
+    const hashMap = new HashMap();
+
+    hashMap.set('Alice', 'I am');
+    hashMap.set('Bob', 'the');
+    hashMap.set('Charlie', 'old');
+    hashMap.set('Steve', 'value');
+    hashMap.set('Drake', 'I am the old value');
+    hashMap.set('0', 'The value');
+
+    test("Return the number of entries in hashMap", () => {
+        expect(hashMap.entries()).toEqual([
+            ['Alice', 'I am'],
+            ['0', 'The value'],
+            ['Charlie', 'old'],
+            ['Steve', 'value'],
+            ['Bob', 'the'],
+            ['Drake', 'I am the old value']
+        ]);
+    });
+});
+
