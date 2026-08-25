@@ -1,277 +1,271 @@
 class Node {
-    constructor(key = null, value = null, nextNode = null) {
-        this.key = key;
-        this.value = value;
-        this.nextNode = nextNode;
-    }
+  constructor(key = null, value = null, nextNode = null) {
+    this.key = key;
+    this.value = value;
+    this.nextNode = nextNode;
+  }
 }
 
 export class HashMap {
-    constructor(loadFactor = 0.75, capacity = 16) {
-        this.loadFactor = loadFactor;
-        this.capacity = capacity;
-        this.elements = [];
+  constructor(loadFactor = 0.75, capacity = 16) {
+    this.loadFactor = loadFactor;
+    this.capacity = capacity;
+    this.elements = [];
+  }
+
+  hash(key) {
+    let hashCode = 0;
+
+    const primeNumber = 31;
+    for (let i = 0; i < key.length; i++) {
+      hashCode = (primeNumber * hashCode + key.charCodeAt(i)) % this.capacity;
     }
+    return hashCode;
+  }
 
-    hash(key) {
-        let hashCode = 0;
-
-        const primeNumber = 31;
-        for (let i = 0; i < key.length; i++) {
-            hashCode = (primeNumber * hashCode + key.charCodeAt(i)) % this.capacity;
+  #checkEntries(limitCapacity) {
+    let entryCounter = 0;
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.elements[i]) {
+        let ptrTrav = this.elements[i];
+        while (ptrTrav !== null) {
+          entryCounter++;
+          ptrTrav = ptrTrav.nextNode;
         }
-        return hashCode;
+      }
     }
 
-    #checkEntries(limitCapacity) {
-        let entryCounter = 0;
-        for (let i = 0; i < this.capacity; i++) {
-            if (this.elements[i]) {
-                let ptrTrav = this.elements[i];
-                while (ptrTrav !== null) {
-                    entryCounter++;
-                    ptrTrav = ptrTrav.nextNode;
-                }
+    if (entryCounter > limitCapacity) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  #findKeyIdx(key) {
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.elements[i]) {
+        let ptrTrav = this.elements[i];
+        while (ptrTrav !== null) {
+          if (ptrTrav.key === key) {
+            return i;
+          }
+          ptrTrav = ptrTrav.nextNode;
+        }
+      }
+    }
+  }
+
+  #checkForExistingEntryWithTheSameKey(key) {
+    for (let i = 0; i < this.capacity; i++) {
+      const currEl = this.elements[i];
+      if (currEl) {
+        if (currEl.key !== key) {
+          let ptrTrav = currEl;
+          while (ptrTrav.nextNode !== null) {
+            if (ptrTrav.key === key) {
+              return true;
             }
-        }
 
-        if (entryCounter > limitCapacity) {
+            ptrTrav = ptrTrav.nextNode;
+          }
+
+          if (ptrTrav.key === key) {
             return true;
-        } else {
-            return false;
+          }
         }
+      }
     }
+  }
 
-    #findKeyIdx(key) {
-        for (let i = 0; i < this.capacity; i++) {
-            if (this.elements[i]) {
-                let ptrTrav = this.elements[i];
-                while (ptrTrav !== null) {
-                    if (ptrTrav.key === key) {
-                        return i;
-                    }
-                    ptrTrav = ptrTrav.nextNode;
-                }
+  #overWriteTheValueInExistingKey(key, value) {
+    for (let i = 0; i < this.capacity; i++) {
+      const currEl = this.elements[i];
+      if (currEl) {
+        if (currEl.key !== key) {
+          let ptrTrav = currEl;
+          while (ptrTrav.nextNode !== null) {
+            if (ptrTrav.key === key) {
+              ptrTrav.value = value;
+              break;
             }
+
+            ptrTrav = ptrTrav.nextNode;
+          }
+
+          if (ptrTrav.key === key) {
+            ptrTrav.value = value;
+          }
         }
+      }
     }
+  }
 
-    #checkForExistingEntryWithTheSameKey(key) {
-        for (let i = 0; i < this.capacity; i++) {
-            const currEl = this.elements[i];
-            if (currEl) {
-                if (currEl.key !== key) {
-                    let ptrTrav = currEl;
-                    while (ptrTrav.nextNode !== null) {
-                        if (ptrTrav.key === key) {
-                            return true;
-                        }
+  #addNewKeyPairs(currEl, hashItem, key, index, limitCapacity) {
+    if (currEl) {
+      if (currEl.key !== key) {
+        let ptrTrav = currEl;
+        while (ptrTrav.nextNode !== null) {
+          if (ptrTrav.key === key) {
+            ptrTrav.nextNode = hashItem;
+            if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
+          }
 
-                        ptrTrav = ptrTrav.nextNode;
-                    }
-
-                    if (ptrTrav.key === key) {
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-
-    #overWriteTheValueInExistingKey(key, value) {
-        for (let i = 0; i < this.capacity; i++) {
-                const currEl = this.elements[i];
-                if (currEl) {
-                    if (currEl.key !== key) {
-                        let ptrTrav = currEl;
-                        while (ptrTrav.nextNode !== null) {
-                            if (ptrTrav.key === key) {
-                                ptrTrav.value = value;
-                                break;
-                            }
-
-                            ptrTrav = ptrTrav.nextNode;
-                        }
-
-                        if (ptrTrav.key === key) {
-                            ptrTrav.value = value;
-                        }
-                    }
-                }
-            }
-    }
-
-    #addNewKeyPairs(currEl, hashItem, key, index, limitCapacity) {
-        if (currEl) {
-                if (currEl.key !== key) {
-                    let ptrTrav = currEl;
-                    while (ptrTrav.nextNode !== null) {
-                        if (ptrTrav.key === key) {
-                            ptrTrav.nextNode = hashItem;
-                            if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
-                        }
-
-                        ptrTrav = ptrTrav.nextNode;
-                    }
-
-                    if (ptrTrav.key === key) {
-                        ptrTrav.value = hashItem.value;
-                        if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
-                    }
-
-                    ptrTrav.nextNode = hashItem;
-                    if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
-                }
-            } else {
-                this.elements[index] = hashItem;
-                if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
-            }
-    }
-
-    set(key, value) {
-
-        const limitCapacity = this.capacity * this.loadFactor;
-        const index = this.hash(key);
-        const hashItem = new Node(key, value);
-        if (index < 0 || index >= this.capacity) {
-            throw new Error("Trying to access index out of bounds");
+          ptrTrav = ptrTrav.nextNode;
         }
 
-        if (this.#checkForExistingEntryWithTheSameKey(key, value)) {
-            this.#overWriteTheValueInExistingKey(key, value);
-        } else {
-            const currEl = this.elements[index];
-            this.#addNewKeyPairs(currEl, hashItem, key, index, limitCapacity)
+        if (ptrTrav.key === key) {
+          ptrTrav.value = hashItem.value;
+          if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
         }
 
+        ptrTrav.nextNode = hashItem;
+        if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
+      }
+    } else {
+      this.elements[index] = hashItem;
+      if (this.#checkEntries(limitCapacity)) this.capacity *= 2;
+    }
+  }
+
+  set(key, value) {
+    const limitCapacity = this.capacity * this.loadFactor;
+    const index = this.hash(key);
+    const hashItem = new Node(key, value);
+    if (index < 0 || index >= this.capacity) {
+      throw new Error("Trying to access index out of bounds");
     }
 
-    get(key) {
-        const index = this.#findKeyIdx(key);
-        const foundedList = this.elements[index];
-        if (!foundedList) {
-            return null;
-        } else {
-            let ptrTrav = foundedList;
-            while (ptrTrav !== null) {
-                if (ptrTrav.key === key) return ptrTrav.value;
-                ptrTrav = ptrTrav.nextNode;
-            }
-            if (ptrTrav.key === key) return ptrTrav.value;
+    if (this.#checkForExistingEntryWithTheSameKey(key, value)) {
+      this.#overWriteTheValueInExistingKey(key, value);
+    } else {
+      const currEl = this.elements[index];
+      this.#addNewKeyPairs(currEl, hashItem, key, index, limitCapacity);
+    }
+  }
+
+  get(key) {
+    const index = this.#findKeyIdx(key);
+    const foundedList = this.elements[index];
+    if (!foundedList) {
+      return null;
+    } else {
+      let ptrTrav = foundedList;
+      while (ptrTrav !== null) {
+        if (ptrTrav.key === key) return ptrTrav.value;
+        ptrTrav = ptrTrav.nextNode;
+      }
+      if (ptrTrav.key === key) return ptrTrav.value;
+    }
+  }
+
+  has(key) {
+    const index = this.#findKeyIdx(key);
+    const foundedEl = this.elements[index];
+    if (foundedEl) {
+      let ptrTrav = foundedEl;
+      while (ptrTrav !== null) {
+        if (ptrTrav.key === key) return true;
+        ptrTrav = ptrTrav.nextNode;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  remove(key) {
+    const index = this.#findKeyIdx(key);
+    const foundedEl = this.elements[index];
+    if (foundedEl) {
+      let ptrTrav = foundedEl;
+      let indexCount = 0;
+      while (ptrTrav !== null) {
+        if (ptrTrav.key === key && indexCount === 0) {
+          this.elements[index] = ptrTrav.nextNode;
+          return true;
+        } else if (ptrTrav.nextNode.key === key) {
+          ptrTrav.nextNode = ptrTrav.nextNode.nextNode;
+          return true;
         }
+        ptrTrav = ptrTrav.nextNode;
+        indexCount++;
+      }
+    } else {
+      return false;
     }
+  }
 
-    has(key) {
-        const index = this.#findKeyIdx(key);
-        const foundedEl = this.elements[index];
-        if (foundedEl) {
-            let ptrTrav = foundedEl;
-            while (ptrTrav !== null) {
-                if (ptrTrav.key === key) return true;
-                ptrTrav = ptrTrav.nextNode;
-            }
-        } else {
-            return false;
+  length() {
+    let entryCounter = 0;
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.elements[i]) {
+        let ptrTrav = this.elements[i];
+        while (ptrTrav !== null) {
+          entryCounter++;
+          ptrTrav = ptrTrav.nextNode;
         }
+      }
     }
 
-    remove(key) {
-        const index = this.#findKeyIdx(key);
-        const foundedEl = this.elements[index];
-        if (foundedEl) {
-            let ptrTrav = foundedEl;
-            let indexCount = 0;
-            while (ptrTrav !== null) {
-                if (ptrTrav.key === key && indexCount === 0) {
-                    this.elements[index] = ptrTrav.nextNode;
-                    return true;
-                } else if (ptrTrav.nextNode.key === key) {
-                    ptrTrav.nextNode = ptrTrav.nextNode.nextNode;
-                    return true;
-                }
-                ptrTrav = ptrTrav.nextNode;
-                indexCount++;
-            }
-        } else {
-            return false;
+    return entryCounter;
+  }
+
+  clear() {
+    this.elements = [];
+  }
+
+  keys() {
+    const keys = [];
+
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.elements[i]) {
+        let ptrTrav = this.elements[i];
+        while (ptrTrav !== null) {
+          keys.push(ptrTrav.key);
+          ptrTrav = ptrTrav.nextNode;
         }
+      }
     }
 
-    length() {
+    return keys.sort().join(", ");
+  }
 
-        let entryCounter = 0;
-        for (let i = 0; i < this.capacity; i++) {
-            if (this.elements[i]) {
-                let ptrTrav = this.elements[i];
-                while (ptrTrav !== null) {
-                    entryCounter++;
-                    ptrTrav = ptrTrav.nextNode;
-                }
-            }
+  values() {
+    const values = [];
+
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.elements[i]) {
+        let ptrTrav = this.elements[i];
+        while (ptrTrav !== null) {
+          values.push(ptrTrav.value);
+          ptrTrav = ptrTrav.nextNode;
         }
-
-        return entryCounter;
+      }
     }
 
-    clear() {
-        this.elements = [];
-    }
+    return values.sort().join(", ");
+  }
 
-    keys() {
-        const keys = [];
+  entries() {
+    const entries = [];
 
-        for (let i = 0; i < this.capacity; i++) {
-            if (this.elements[i]) {
-                let ptrTrav = this.elements[i];
-                while (ptrTrav !== null) {
-                    keys.push(ptrTrav.key);
-                    ptrTrav = ptrTrav.nextNode;
-                }
-            }
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.elements[i]) {
+        let ptrTrav = this.elements[i];
+        while (ptrTrav !== null) {
+          const entry = [];
+          entry.push(ptrTrav.key);
+          entry.push(ptrTrav.value);
+          if (!entry.includes(entry)) {
+            entries.push(entry);
+          } else {
+            break;
+          }
+          ptrTrav = ptrTrav.nextNode;
         }
-
-
-        return keys.sort().join(', ');
-
+      }
     }
 
-    values() {
-        const values = [];
-
-        for (let i = 0; i < this.capacity; i++) {
-            if (this.elements[i]) {
-                let ptrTrav = this.elements[i];
-                while (ptrTrav !== null) {
-                    values.push(ptrTrav.value);
-                    ptrTrav = ptrTrav.nextNode;
-                }
-            }
-        }
-
-
-        return values.sort().join(', ');
-    }
-
-    entries() {
-        const entries = [];
-
-        for (let i = 0; i < this.capacity; i++) {
-            if (this.elements[i]) {
-                let ptrTrav = this.elements[i];
-                while (ptrTrav !== null) {
-                    const entry = [];
-                    entry.push(ptrTrav.key);
-                    entry.push(ptrTrav.value);
-                    if (!entry.includes(entry)) {
-                        entries.push(entry);
-                    } else {
-                        break;
-                    }
-                    ptrTrav = ptrTrav.nextNode;
-                }
-            }
-        }
-
-        return entries;
-    }
+    return entries;
+  }
 }
