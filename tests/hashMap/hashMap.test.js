@@ -171,3 +171,77 @@ describe('Return the stored entries inside hashMap', () => {
     });
 });
 
+
+describe('Return expanded capacity after limit entries is passed with mutations of the hashMap', () => {
+    const hashMap = new HashMap();
+
+    hashMap.set('apple', 'red')
+    hashMap.set('banana', 'yellow')
+    hashMap.set('carrot', 'orange')
+    hashMap.set('dog', 'brown')
+    hashMap.set('elephant', 'gray')
+    hashMap.set('frog', 'green')
+    hashMap.set('grape', 'purple')
+    hashMap.set('hat', 'black')
+    hashMap.set('ice cream', 'white')
+    hashMap.set('jacket', 'blue')
+    hashMap.set('kite', 'pink')
+    hashMap.set('lion', 'golden')
+
+    hashMap.set('moon', 'silver')
+
+    hashMap.set('lion', 'yellow')
+
+    test('Return new expanded capacity after new entry', () => {
+        expect(hashMap.capacity).toBe(32);
+    })
+
+    test('Return new value from the same key', () => {
+        expect(hashMap.get('lion')).toBe('yellow');
+    })
+
+    test('Return new value from the same key', () => {
+        expect(hashMap.remove('elephant')).toBe(true);
+    });
+
+    test('Return new value from the same key', () => {
+        expect(hashMap.remove('lion')).toBe(true);
+    });
+
+    test('Return value if it had been in hashMap', () => {
+        expect(hashMap.has('moon')).toBe(true);
+    });
+
+    test('Return length of mutated hashMap', () => {
+        expect(hashMap.length()).toBe(11);
+    });
+
+    test('Return all mutated entries from hashMap', () => {
+        expect(hashMap.entries()).toEqual([
+            ["moon", "silver"],
+            ["carrot", "orange"],
+            ["frog", "green"],
+            ["banana", "yellow"],
+            ["apple", "red"],
+            ["grape", "purple"],
+            ["hat", "black"],
+            ["dog", "brown"],
+            ["ice cream", "white"],
+            ["jacket", "blue"],
+            ["kite", "pink"]]);
+    });
+
+    test('Return all mutated keys from hashMap', () => {
+        expect(hashMap.keys()).toBe("apple, banana, carrot, dog, frog, grape, hat, ice cream, jacket, kite, moon");
+    });
+
+    test('Return all mutated values from hashMap', () => {
+        expect(hashMap.values()).toBe("black, blue, brown, green, orange, pink, purple, red, silver, white, yellow");
+    });
+
+    test('Return length of the cleared hashMap', () => {
+        hashMap.clear();
+        expect(hashMap.length()).toBe(0);
+    });
+
+});
