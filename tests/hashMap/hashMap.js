@@ -235,4 +235,21 @@ export class HashMap {
 
     }
 
+    values() {
+        const values = [];
+
+        for (let i = 0; i < this.capacity; i++) {
+            if (this.elements[i]) {
+                let ptrTrav = this.elements[i];
+                while (ptrTrav !== null) {
+                    values.push(ptrTrav.value);
+                    ptrTrav = ptrTrav.nextNode;
+                }
+            }
+        }
+
+
+        return values.sort().join(', ');
+    }
+
 }
