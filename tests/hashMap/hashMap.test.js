@@ -133,3 +133,18 @@ describe('Return the stored keys inside hashMap', () => {
         expect(hashMap.keys()).toBe('0, Alice, Bob, Charlie, Drake, Steve');
     });
 });
+
+describe('Return the stored values inside hashMap', () => {
+    const hashMap = new HashMap();
+
+    hashMap.set('Alice', 'I am');
+    hashMap.set('Bob', 'the');
+    hashMap.set('Charlie', 'old');
+    hashMap.set('Steve', 'value');
+    hashMap.set('Drake', 'I am the old value');
+    hashMap.set('0', 'The value');
+
+    test("Return the number of empty entries in hashMap after 'clear'", () => {
+        expect(hashMap.values()).toBe('I am, I am the old value, The value, old, the, value');
+    });
+});
